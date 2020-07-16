@@ -22,6 +22,9 @@ with:
 ``` r
 # install.packages("devtools")
 devtools::install_github("quickbendelat/outlookcalendarR")
+
+# or
+
 remotes::install_github("quickbendelat/outlookcalendarR")
 ```
 
