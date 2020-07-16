@@ -5,14 +5,11 @@
 #'
 #' @return POSIXct
 #'
-#' @importFrom purrr map_dbl
-#' @importFrom openxlsx convertToDateTime
-#'
 .COMDate_to_POSIX <- function(x) {
   
   stopifnot('COMDate' %in% class(x))
   
-  x %>% purrr::map_dbl( ~ .x) %>% openxlsx::convertToDateTime()
+  x %>% purrr::map_dbl( ~ .x) %>% convertToDateTime()
   
 }
 
