@@ -24,7 +24,7 @@ with:
 remotes::install_github("quickbendelat/outlookcalendarR")
 ```
 
-You will also need to install RCCOMClient.
+You will also need to install RDCOMClient.
 
 For R \< 4.0:
 
@@ -38,7 +38,7 @@ RDCOMClient. See
 repo.
 
 The current solution for R \> 4.0 is to download and install a specially
-built binary by following:
+built binary:
 
 ``` r
 dir <- tempdir()
