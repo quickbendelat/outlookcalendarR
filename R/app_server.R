@@ -13,16 +13,20 @@
 #' @noRd
 app_server <- function( input, output, session ) {
   
+  
   OutApp <- COMCreate("Outlook.Application")
   outlookNameSpace = OutApp$GetNameSpace("MAPI")
+  sent_fld <- outlookNameSpace$GetDefaultFolder(5) # 5 is sent folder
+  sent_emails <- sent_fld$items
+  me <- sent_emails(1)[['SenderName']]
+  
   calendar <- outlookNameSpace$GetDefaultFolder(9) #9 is calendar
   Cnt = calendar$Items()$Count()
   meetings <- calendar$items
   df <- seq(1:Cnt) %>% 
     tibble::enframe(name = NULL, value = "record")
   
-  me <- find_user()
-  
+
   calendar_meetings <- reactive({
     
     df %>% 
