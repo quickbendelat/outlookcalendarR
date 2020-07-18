@@ -24,7 +24,7 @@ app_ui <- function(request) {
           tabItem(tabName = "dashboard",
                   fluidRow(
                     column(width = 12,
-                           verbatimTextOutput("debug")
+                           mod_outlookcalendar_ui("outlookcalendar_module_ui")
                     )
                   )
           )
