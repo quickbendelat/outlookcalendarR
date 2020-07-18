@@ -5,7 +5,7 @@
 #' @import shiny
 #' @import dplyr
 #' @import tidyr
-#' @import excel.link
+#' @import RDCOMClient
 #' @import purrr
 #' @import tibble
 #' @import stringr

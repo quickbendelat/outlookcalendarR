@@ -20,12 +20,32 @@ You can install outlookcalendarR from [GitHub](https://github.com/)
 with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("quickbendelat/outlookcalendarR")
-
-# or
-
+# install.packages("rempotes")
 remotes::install_github("quickbendelat/outlookcalendarR")
+```
+
+You will also need to install RCCOMClient.
+
+For R \< 4.0:
+
+``` r
+remotes::install_github("omegahat/RDCOMClient")
+```
+
+As of R \>= 4.0, the app crashes due to an error with a function from
+RDCOMClient. See
+[issue](https://github.com/omegahat/RDCOMClient/issues/24) on the github
+repo.
+
+The current solution for R \> 4.0 is to download and install a specially
+built binary by following:
+
+``` r
+dir <- tempdir()
+zip <- file.path(dir, "RDCOMClient.zip")
+url <- "https://github.com/dkyleward/RDCOMClient/releases/download/v0.94/RDCOMClient_binary.zip"
+download.file(url, zip)
+install.packages(zip, repos = NULL, type = "win.binary")
 ```
 
 ## Running
@@ -38,8 +58,7 @@ outlookcalendarR::run_app()
 
 ## Connecting to MS Outlook
 
-The package
-[excel.link](https://cran.r-project.org/web/packages/excel.link/index.html)
+The package [RDCOMClient](https://github.com/omegahat/RDCOMClient)
 provides the ability to connect to MS Outlook.
 
 [This Microsoft
