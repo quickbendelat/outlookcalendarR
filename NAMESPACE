@@ -3,6 +3,7 @@
 export(run_app)
 import(RDCOMClient)
 import(dplyr)
+import(openxlsx)
 import(purrr)
 import(shiny)
 import(shinydashboard)

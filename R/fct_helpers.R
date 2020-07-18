@@ -9,7 +9,7 @@
   
   stopifnot('COMDate' %in% class(x))
   
-  x %>% purrr::map_dbl( ~ .x) %>% convertToDateTime()
+  x %>% purrr::map_dbl( ~ .x) %>% openxlsx::convertToDateTime()
   
 }
 
