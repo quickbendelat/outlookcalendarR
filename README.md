@@ -53,6 +53,7 @@ install.packages(zip, repos = NULL, type = "win.binary")
 outlookcalendarR is run by:
 
 ``` r
+library(outlookcalendarR)
 outlookcalendarR::run_app()
 ```
 
