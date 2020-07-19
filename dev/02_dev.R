@@ -34,7 +34,7 @@ usethis::use_package( "ggplot2" )
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
-golem::add_fct( "helpers" )
+# golem::add_fct( "helpers" )
 # golem::add_utils( "helpers" )
 
 ## External resources

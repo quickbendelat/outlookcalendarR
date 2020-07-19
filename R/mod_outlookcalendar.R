@@ -8,7 +8,7 @@
 #' @param output internal
 #' @param session internal
 #'
-#' @rdname mod_my_first_module
+#' @rdname mod_outlookcalendar
 #'
 #' @keywords internal
 #' @export 
