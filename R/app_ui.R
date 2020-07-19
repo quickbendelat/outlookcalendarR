@@ -24,6 +24,10 @@ app_ui <- function(request) {
           tabItem(tabName = "dashboard",
                   fluidRow(
                     column(width = 12,
+                           # dateRangeInput('dateRange',
+                           #                label = 'Date range input: yyyy-mm-dd',
+                           #                start = Sys.Date() - 2, end = Sys.Date() + 2
+                           # ),
                            mod_outlookcalendar_ui("outlookcalendar_module_ui")
                     )
                   )

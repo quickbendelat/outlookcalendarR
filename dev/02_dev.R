@@ -24,6 +24,8 @@ usethis::use_package( "stringr" )
 usethis::use_package( "openxlsx" )
 usethis::use_package( "shiny" )
 usethis::use_package( "shinydashboard" )
+usethis::use_package( "lubridate" )
+usethis::use_package( "ggplot2" )
 
 ## Add modules ----
 ## Create a module infrastructure in R/

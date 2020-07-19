@@ -19,7 +19,9 @@ Imports:
     stringr,
     shinydashboard,
     RDCOMClient,
-    openxlsx
+    openxlsx,
+    lubridate,
+    ggplot2
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1

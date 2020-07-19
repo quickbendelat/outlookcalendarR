@@ -6,6 +6,7 @@
 #' @noRd
 app_server <- function( input, output, session ) {
   
+
   callModule(mod_outlookcalendar_server, "outlookcalendar_module_ui")
   
 }
