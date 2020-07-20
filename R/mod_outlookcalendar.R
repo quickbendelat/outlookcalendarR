@@ -19,8 +19,10 @@ mod_outlookcalendar_ui <- function(id){
     dateRangeInput(ns("dateRange"), label = 'Date range input: yyyy-mm-dd',
                    start = ymd(Sys.Date()) - ddays(5), end = ymd(Sys.Date()) + ddays(2)),
     plotOutput(ns("top5_plot")),
-    plotOutput(ns("meeting_num_plot")),
-    plotOutput(ns("meeting_ratio_plot"))
+    br(),
+    br(),
+    plotOutput(ns("meeting_num_plot"))
+    # plotOutput(ns("meeting_ratio_plot"))
   )
 }
 
@@ -38,6 +40,7 @@ mod_outlookcalendar_ui <- function(id){
 #' @import openxlsx
 #' @import lubridate
 #' @import ggplot2
+#' @importFrom scales percent
 
 mod_outlookcalendar_server <- function(input, output, session){
   ns <- session$ns
@@ -101,11 +104,21 @@ mod_outlookcalendar_server <- function(input, output, session){
   
   output$top5_plot <- renderPlot({
     top_5_by_org() %>% 
-      ggplot(aes(x = num_meetings, y = reorder(sender, duration))) +
-      geom_bar(stat="identity", position = "dodge", alpha = 0.4) +
-      geom_text(aes(label=paste("duration:", duration, "hours")), position=position_dodge(width=0.9), hjust=1.2) +
-      ylab("organiser") +
-      theme_minimal()
+      ggplot(aes(x = num_meetings, y = reorder(sender, duration), width = duration)) +
+      geom_bar(stat="identity", position = position_dodge2(preserve = "single"), fill = "darkgreen", alpha = 0.4) +
+      geom_text(aes(label = num_meetings), position = position_dodge(width = 1), hjust = 3) +
+      labs(title = "Top 5 meeting Organisers showing number of meetings",
+           subtitle = "(width of bars represents relative duration)") +
+      theme_minimal() +
+      theme(
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.text.x = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        plot.title.position = "plot"
+      )
   })
   
   
@@ -127,20 +140,21 @@ mod_outlookcalendar_server <- function(input, output, session){
     calendar_meetings_summary() %>%
       ggplot(aes(y = num_meetings, fill = organiser, x = 1)) +
       geom_bar(stat="identity", position = "stack", alpha = 0.4) +
-      geom_text(aes(label=paste("duration:", duration, "hours")), hjust=1.2) +
-      ylab("organiser") +
-      theme_minimal()
+      geom_text(aes(label=paste0(num_meetings, "    (", percent(num_ratio), ")")), hjust=1.2, position = position_stack(reverse = FALSE, vjust = 0.5)) +
+      ylab("num_meetings") +
+      theme_void() +
+      ggtitle("Number of meetings")
   })
   
-  output$meeting_ratio_plot <- renderPlot({
-    calendar_meetings_summary() %>%
-      ggplot(aes(x = num_ratio, y = organiser)) +
-      geom_bar(stat="identity", position = "dodge", alpha = 0.4) +
-      geom_text(aes(label=paste("duration:", duration_ratio*100, "percent")), position=position_dodge(width=0.9), hjust=1.2) +
-      ylab("organiser") +
-      xlab("num_meetings_ratio") +
-      theme_minimal()
-  })
+  # output$meeting_ratio_plot <- renderPlot({
+  #   calendar_meetings_summary() %>%
+  #     ggplot(aes(x = num_ratio, y = organiser)) +
+  #     geom_bar(stat="identity", position = "dodge", alpha = 0.4) +
+  #     geom_text(aes(label=paste("duration:", duration_ratio*100, "percent")), position=position_dodge(width=0.9), hjust=1.2) +
+  #     ylab("organiser") +
+  #     xlab("num_meetings_ratio") +
+  #     theme_minimal()
+  # })
 
   
   
