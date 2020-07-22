@@ -27,6 +27,7 @@ usethis::use_package( "shinydashboard" )
 usethis::use_package( "lubridate" )
 usethis::use_package( "ggplot2" )
 usethis::use_package(" scales ")
+usethis::use_package( "forcats" )
 
 ## Add modules ----
 ## Create a module infrastructure in R/

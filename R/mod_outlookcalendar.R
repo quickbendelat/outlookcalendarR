@@ -21,8 +21,10 @@ mod_outlookcalendar_ui <- function(id){
     plotOutput(ns("top5_plot")),
     br(),
     br(),
-    plotOutput(ns("meeting_num_plot"))
-    # plotOutput(ns("meeting_ratio_plot"))
+    plotOutput(ns("meeting_num_plot")),
+    br(),
+    br(),
+    plotOutput(ns("daily_time_plot"))
   )
 }
 
@@ -41,6 +43,7 @@ mod_outlookcalendar_ui <- function(id){
 #' @import lubridate
 #' @import ggplot2
 #' @importFrom scales percent
+#' @importFrom forcats fct_reorder
 
 mod_outlookcalendar_server <- function(input, output, session){
   ns <- session$ns
@@ -104,11 +107,11 @@ mod_outlookcalendar_server <- function(input, output, session){
   
   output$top5_plot <- renderPlot({
     top_5_by_org() %>% 
-      ggplot(aes(x = num_meetings, y = reorder(sender, duration), width = duration)) +
-      geom_bar(stat="identity", position = position_dodge2(preserve = "single"), fill = "darkgreen", alpha = 0.4) +
+      ggplot(aes(x = num_meetings, y = reorder(sender, duration))) +
+      # geom_bar(stat="identity", position = position_dodge2(preserve = "single"), fill = "darkgreen", alpha = 0.4) +
+      geom_bar(stat="identity", position = position_dodge(width  =1), fill = "darkgreen", alpha = 0.4) +
       geom_text(aes(label = num_meetings), position = position_dodge(width = 1), hjust = 3) +
-      labs(title = "Top 5 meeting Organisers showing number of meetings",
-           subtitle = "(width of bars represents relative duration)") +
+      labs(title = "Top 5 meeting Organisers showing number of meetings") +
       theme_minimal() +
       theme(
         axis.title.x = element_blank(),
@@ -121,7 +124,7 @@ mod_outlookcalendar_server <- function(input, output, session){
       )
   })
   
-  
+  ## number of meetings organised by me or others
   calendar_meetings_summary <- reactive({
     calendar_meetings() %>% 
       rename(organiser = org_by_other) %>% 
@@ -146,15 +149,48 @@ mod_outlookcalendar_server <- function(input, output, session){
       ggtitle("Number of meetings")
   })
   
-  # output$meeting_ratio_plot <- renderPlot({
-  #   calendar_meetings_summary() %>%
-  #     ggplot(aes(x = num_ratio, y = organiser)) +
-  #     geom_bar(stat="identity", position = "dodge", alpha = 0.4) +
-  #     geom_text(aes(label=paste("duration:", duration_ratio*100, "percent")), position=position_dodge(width=0.9), hjust=1.2) +
-  #     ylab("organiser") +
-  #     xlab("num_meetings_ratio") +
-  #     theme_minimal()
-  # })
+  ## time spent in meetings
+  daily_time <- reactive({
+    date_seq <- seq.Date(from = input$dateRange[1], to = input$dateRange[2], by = "day")
+    
+    meetings_durations_1 <- calendar_meetings() %>% 
+      mutate(start = lubridate::as_date(start)) %>% 
+      select(start, duration) %>% 
+      group_by(start) %>% 
+      summarise(dur_meetings = sum(duration)) %>% 
+      mutate(dur_working = 8 - dur_meetings) %>% 
+      pivot_longer(dur_meetings:dur_working, names_to = "type", names_prefix = "dur_", values_to = "hours")
+    
+    date_seq %>% 
+      enframe(name = NULL, value = "start") %>% 
+      left_join(meetings_durations_1, by = "start") %>% 
+      mutate(day = lubridate::wday(start, label = TRUE)) %>% 
+      filter(!day %in% c("Sat", "Sun")) %>% 
+      arrange(start) %>% 
+      mutate(type = ifelse(is.na(type), "working", type),
+             hours = ifelse(is.na(hours), 8, hours),
+             date = paste(day, lubridate::day(start), lubridate::month(start, label = TRUE)),
+             date = fct_reorder(date, start))
+  })
+  
+  output$daily_time_plot <- renderPlot({
+    daily_time() %>%
+      ggplot(aes(fill=type, x=hours, y=date)) + 
+      geom_bar(position="stack", stat="identity", alpha = 0.4) +
+      ggtitle("Hours in meetings vs working by day") +
+      xlab("") + 
+      theme_minimal() +
+      theme(
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.text.x = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        plot.title.position = "plot"
+      ) +
+      geom_text(aes(label=hours), position = position_stack(reverse = FALSE, 0.9), hjust = 1.1, size = 3.5)
+  })
 
   
   
