@@ -111,7 +111,7 @@ mod_outlookcalendar_server <- function(input, output, session){
       # geom_bar(stat="identity", position = position_dodge2(preserve = "single"), fill = "darkgreen", alpha = 0.4) +
       geom_bar(stat="identity", position = position_dodge(width  =1), fill = "darkgreen", alpha = 0.4) +
       geom_text(aes(label = num_meetings), position = position_dodge(width = 1), hjust = 3) +
-      labs(title = "Top 5 meeting Organisers showing number of meetings") +
+      labs(title = "Top 5 meeting organisers showing number of meetings") +
       theme_minimal() +
       theme(
         axis.title.x = element_blank(),
@@ -146,7 +146,7 @@ mod_outlookcalendar_server <- function(input, output, session){
       geom_text(aes(label=paste0(num_meetings, "    (", percent(num_ratio), ")")), hjust=1.2, position = position_stack(reverse = FALSE, vjust = 0.5)) +
       ylab("num_meetings") +
       theme_void() +
-      ggtitle("Number of meetings")
+      ggtitle("Number of meetings organised by me vs others")
   })
   
   ## time spent in meetings
